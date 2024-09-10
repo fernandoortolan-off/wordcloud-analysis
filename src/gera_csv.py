@@ -1,13 +1,20 @@
+import main
+
 import os
 import re
-# import numpy as np
 import pandas as pd
-# import matplotlib.pyplot as plt
 
 from collections import Counter
 from pandas import DataFrame
-# from PIL import Image
-# from wordcloud import WordCloud, ImageColorGenerator
+
+
+os.chdir('./')
+
+id_cliente = main.id_cliente
+nome_do_arquivo_csv = main.nome_do_arquivo_csv
+
+diretorio = f'./csv_resultados/cancelamentos/{id_cliente}/'
+os.makedirs(diretorio, exist_ok=True)  # Cria o diretório caso não exista
 
 
 def gerar_lista_anos_distintos(df : DataFrame, nome_coluna_tipo_date : str):
@@ -27,15 +34,16 @@ def gerar_lista_anos_distintos(df : DataFrame, nome_coluna_tipo_date : str):
 
     anos_distintos.sort()
 
-    # for ano in anos:
-    #     print(ano)
+    for ano in anos_distintos:
+        if ano.isnumeric() is False:
+            anos_distintos.remove(ano)
 
     return anos_distintos
 
 
 def gerar_csv_contagem_de_palavras(df : DataFrame, nome_coluna_obs : str, nome_arquivo_saida : str):
     """
-    Gera uma lista ordenada de anos distintos extraídos de uma coluna de datas em um DataFrame.
+    Gera uma lista ordenada de anos distintos extraídos de uma coluna de datas de um DataFrame.
     
     :param df: DataFrame contendo os dados.
     :param nome_coluna_obs: Nome da coluna que contém as observações dos cancelamentos.
@@ -59,7 +67,7 @@ def gerar_csv_contagem_de_palavras(df : DataFrame, nome_coluna_obs : str, nome_a
     contagem_palavras_df = pd.DataFrame(contagem_palavras.items(), columns=['palavra', 'contagem'])
 
     # Gera um csv
-    contagem_palavras_df.to_csv(f'{nome_arquivo_saida}.csv', index=False)
+    contagem_palavras_df.to_csv(f'{diretorio}{nome_arquivo_saida}.csv', index=False)
 
 
 def gerar_csv_por_ano(df : DataFrame, nome_coluna_tipo_date : str, lista_anos : list, nome_arquivo_saida : str):
@@ -77,11 +85,10 @@ def gerar_csv_por_ano(df : DataFrame, nome_coluna_tipo_date : str, lista_anos : 
         gerar_csv_contagem_de_palavras(df_filtrado_por_ano, 'obs_cancelamento', f'{nome_arquivo_saida}_{ano}')
 
 
-os.chdir('./csv_testes')
+# Lê o .csv como um DataFrame
+df_cancelamentos = pd.read_csv(f'csv/{nome_do_arquivo_csv}', sep=';', encoding = 'utf-8')
 
-# Query do .csv raiz: SELECT obs_cancelamento, data_cancelamento FROM cliente_contrato WHERE `status` = 'I';
-# df_cancelamentos = pd.read_csv('obs_cancelamento.csv', sep=';', encoding = 'utf-8')
-df_cancelamentos_light = pd.read_csv('obs_cancelamento2.csv', sep=';', encoding = 'utf-8')
+# Gera uma lista ordenada de anos distintos extraídos do DataFrame declarado anteriormente
+lista_anos_distintos = gerar_lista_anos_distintos(df_cancelamentos, 'data_cancelamento')
 
-lista_anos_distintos = gerar_lista_anos_distintos(df_cancelamentos_light, 'data_cancelamento')
-gerar_csv_por_ano(df_cancelamentos_light, 'data_cancelamento', lista_anos_distintos, 'contagem_palavras')
+gerar_csv_por_ano(df_cancelamentos, 'data_cancelamento', lista_anos_distintos, 'contagem_palavras')

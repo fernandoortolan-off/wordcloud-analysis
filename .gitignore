@@ -1,8 +1,9 @@
 # Ignora a pasta do ambiente virtual
 venv/
 
-# Ignora a pasta que contém os arquivos .csv gerados em testes
-csv_testes/
+# Ignora a pasta que contém os arquivos gerados
+csv_resultados/
+wordcloud_resultados/
 
 # Ignora arquivos temporários e de cache
 *.pyc
