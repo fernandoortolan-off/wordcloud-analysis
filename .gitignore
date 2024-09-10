@@ -1,0 +1,16 @@
+# Ignora a pasta do ambiente virtual
+venv/
+
+# Ignora a pasta que contém os arquivos .csv gerados em testes
+csv_testes/
+
+# Ignora arquivos temporários e de cache
+*.pyc
+__pycache__/
+
+# Ignora arquivos de configuração específicos do IDE
+.vscode/
+.idea/
+
+
+.DS_Store
