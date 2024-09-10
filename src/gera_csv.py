@@ -20,7 +20,7 @@ def gerar_lista_anos_distintos(df : DataFrame, nome_coluna_tipo_date : str):
     anos_distintos = []
 
     for index, row in df.iterrows():
-        data = row[nome_coluna_tipo_date]
+        data = str(row[nome_coluna_tipo_date])
         ano = data[len(data) - 4:]  # Extrai o ano de uma data no formato dd/mm/yyyy, como '01/01/2010'
         if ano not in anos_distintos:
             anos_distintos.append(ano)
@@ -77,10 +77,11 @@ def gerar_csv_por_ano(df : DataFrame, nome_coluna_tipo_date : str, lista_anos : 
         gerar_csv_contagem_de_palavras(df_filtrado_por_ano, 'obs_cancelamento', f'{nome_arquivo_saida}_{ano}')
 
 
-os.chdir('./csv')
+os.chdir('./csv_testes')
 
+# Query do .csv raiz: SELECT obs_cancelamento, data_cancelamento FROM cliente_contrato WHERE `status` = 'I';
 # df_cancelamentos = pd.read_csv('obs_cancelamento.csv', sep=';', encoding = 'utf-8')
-df_cancelamentos_light = pd.read_csv('obs_cancelamento_light.csv', sep=';', encoding = 'utf-8')
+df_cancelamentos_light = pd.read_csv('obs_cancelamento2.csv', sep=';', encoding = 'utf-8')
 
 lista_anos_distintos = gerar_lista_anos_distintos(df_cancelamentos_light, 'data_cancelamento')
 gerar_csv_por_ano(df_cancelamentos_light, 'data_cancelamento', lista_anos_distintos, 'contagem_palavras')

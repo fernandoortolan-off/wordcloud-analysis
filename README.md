@@ -19,3 +19,8 @@ pip install -r requirements.txt
 ```console
 deactivate
 ```
+
+### Documentação da biblioteca wordcloud
+```
+https://amueller.github.io/word_cloud/
+```
