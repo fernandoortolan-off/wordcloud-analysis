@@ -2,15 +2,15 @@ import main
 import gera_csv
 
 import os
-import re
-import numpy as np
+# import re
+# import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from collections import Counter
-from pandas import DataFrame
-from PIL import Image
-from wordcloud import WordCloud, ImageColorGenerator, STOPWORDS
+# from collections import Counter
+# from pandas import DataFrame
+# from PIL import Image
+from wordcloud import WordCloud  #, ImageColorGenerator, STOPWORDS
 
 
 os.chdir('./')
