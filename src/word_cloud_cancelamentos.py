@@ -17,7 +17,7 @@ os.chdir('./')
 
 id_cliente = main.id_cliente
 diretorio_csv_resultados = gera_csv.diretorio
-diretorio_wordclouds = f'./wordcloud_resultados/cancelamentos/{id_cliente}/'
+diretorio_wordclouds = f'./nuvem_palavras/cancelamentos/{id_cliente}/'
 os.makedirs(diretorio_wordclouds, exist_ok=True)  # Cria o diretório caso não exista
 
 arquivos = [f for f in os.listdir(diretorio_csv_resultados) if os.path.isfile(os.path.join(diretorio_csv_resultados, f))]
@@ -54,7 +54,7 @@ for arquivo in arquivos:
                         )
 
     wordcloud.generate_from_frequencies(frequencies=d)
-    plt.figure(figsize=(10, 10))  # Tamanho do gráfico
+    plt.figure(figsize=(20, 7.5))  # Tamanho do gráfico em polegadas
     plt.imshow(wordcloud, interpolation='bilinear')
     plt.title(f'Cancelamentos {ano}')
     plt.axis('off')
