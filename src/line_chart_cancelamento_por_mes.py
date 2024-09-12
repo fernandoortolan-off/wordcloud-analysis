@@ -12,14 +12,14 @@ os.chdir('./')
 id_cliente = main.id_cliente
 nome_do_arquivo_csv = main.nome_do_arquivo_csv
 diretorio_csv = './csv/'
-diretorio_grafico_linha = f'./grafico_linha/cadastros_por_mes/{id_cliente}/'
+diretorio_grafico_linha = f'./grafico_linha/cancelamentos_por_mes/{id_cliente}/'
 os.makedirs(diretorio_grafico_linha, exist_ok=True)  # Cria o diretório caso não exista
 
 
-def gerar_listas_anos_cadastros(df : DataFrame, nome_coluna_data : str, nome_coluna_quant : int):
+def gerar_listas_anos_cancelamentos(df : DataFrame, nome_coluna_data : str, nome_coluna_quant : int):
     """
     Gera duas listas: uma com todos os anos distintos e outra
-    contendo listas que representam a quantidade de novos cadastros
+    contendo listas que representam a quantidade de cancelamentos
     por mês, correspondendo à quantidade de anos da lista de anos
     distintos. Os dados são extraídos de um DataFrame.
     
@@ -53,14 +53,14 @@ def gerar_listas_anos_cadastros(df : DataFrame, nome_coluna_data : str, nome_col
 
 def filtrar_listas_media_ate_ano_limite(anos_distintos : list, quant_por_mes : list, ano_limite : int):
     """
-    Filtra as listas geradas pela função gerar_listas_anos_cadastros,
-    calculando a média do número de cadastros em cada mês até o ano
+    Filtra as listas geradas pela função gerar_listas_anos_cancelamentos,
+    calculando a média do número de cancelamentos em cada mês até o ano
     limite passado por parâmetro.
     
     Retorna as duas listas filtradas.
     
-    :param anos_distintos: Lista de anos distintos gerada pela função gerar_listas_anos_cadastros.
-    :param quant_por_mes: Lista de quantidades por mês gerada pela função gerar_listas_anos_cadastros.
+    :param anos_distintos: Lista de anos distintos gerada pela função gerar_listas_anos_cancelamentos.
+    :param quant_por_mes: Lista de quantidades por mês gerada pela função gerar_listas_anos_cancelamentos.
     :param ano_limite: Ano limite para o cálculo da média.
     """
     new_anos_distintos = anos_distintos.copy()
@@ -85,13 +85,13 @@ def filtrar_listas_media_ate_ano_limite(anos_distintos : list, quant_por_mes : l
     return new_anos_distintos, new_quant_por_mes
 
 
-def verificar_maior_mes_de_crescimento_ate_ano_atual(anos_distintos : list, quant_por_mes):
+def verificar_maior_mes_de_cancelamentos_ate_ano_atual(anos_distintos : list, quant_por_mes):
     """
-    Analisa as listas geradas pela função gerar_listas_anos_cadastros
-    e retorna uma string conclusiva sobre o mês com o maior número de cadastros.
+    Analisa as listas geradas pela função gerar_listas_anos_cancelamentos
+    e retorna uma string conclusiva sobre o mês com o maior número de cancelamentos.
     
-    :param anos_distintos: Lista de anos distintos gerada pela função gerar_listas_anos_cadastros.
-    :param quant_por_mes: Lista de quantidades por mês gerada pela função gerar_listas_anos_cadastros.
+    :param anos_distintos: Lista de anos distintos gerada pela função gerar_listas_anos_cancelamentos.
+    :param quant_por_mes: Lista de quantidades por mês gerada pela função gerar_listas_anos_cancelamentos.
     """
     media_ate_ano_limite = [0] * 12
     for i in range(0, (len(anos_distintos) - 1)):
@@ -110,14 +110,14 @@ def verificar_maior_mes_de_crescimento_ate_ano_atual(anos_distintos : list, quan
             maior = media_ate_ano_limite[i]
             mes = i
     
-    conclusao = f"O mês com o maior número de cadastros até 2024 é {meses[mes]}, com {maior} novos cadastros em todo o período."
+    conclusao = f"O mês com o maior número de cancelamentos até 2024 é {meses[mes]}, com {maior} cancelamentos em todo o período."
 
     return conclusao
 
 
-def gerar_grafico_de_linhas_n_cadastros_por_mes(dir_arquivos : str, nome_arquivo_csv : str, ano_limite : int, id_cliente : id, diretorio_final : str):
+def gerar_grafico_de_linhas_n_cancelamentos_por_mes(dir_arquivos : str, nome_arquivo_csv : str, ano_limite : int, id_cliente : id, diretorio_final : str):
     """
-    Gera um gráfico de linhas representando o número de cadastros em cada mês ao longo dos anos.
+    Gera um gráfico de linhas representando o número de cancelamentos em cada mês ao longo dos anos.
     
     :param dir_arquivos: String contendo o diretório onde está o arquivo .csv para gerar o DataFrame.
     :param nome_arquivo_csv: Nome do arquivo .csv que será analisado.
@@ -126,13 +126,13 @@ def gerar_grafico_de_linhas_n_cadastros_por_mes(dir_arquivos : str, nome_arquivo
     :param diretorio_final: Diretório onde a imagem será salva.
     """
 
-    df_cadastros_por_mes = pd.read_csv(f'{dir_arquivos}{nome_arquivo_csv}', sep=';', encoding = 'utf-8')
+    df_cancelamentos_por_mes = pd.read_csv(f'{dir_arquivos}{nome_arquivo_csv}', sep=';', encoding = 'utf-8')
 
-    lista_anos_distintos, lista_quant_por_mes = gerar_listas_anos_cadastros(df_cadastros_por_mes, 'ano_mes', 'quant')
+    lista_anos_distintos, lista_quant_por_mes = gerar_listas_anos_cancelamentos(df_cancelamentos_por_mes, 'ano_mes', 'quant')
     # print(lista_anos_distintos)
     # print(lista_quant_por_mes)
 
-    conclusao = verificar_maior_mes_de_crescimento_ate_ano_atual(lista_anos_distintos, lista_quant_por_mes)
+    conclusao = verificar_maior_mes_de_cancelamentos_ate_ano_atual(lista_anos_distintos, lista_quant_por_mes)
 
     lista_anos_distintos, lista_quant_por_mes = filtrar_listas_media_ate_ano_limite(lista_anos_distintos, lista_quant_por_mes, ano_limite)
     # print(lista_anos_distintos)
@@ -149,15 +149,15 @@ def gerar_grafico_de_linhas_n_cadastros_por_mes(dir_arquivos : str, nome_arquivo
     for i in range(0, len(lista_anos_distintos)):
         plt.plot(meses, lista_quant_por_mes[i], color=cores[i], marker="o", linestyle="--")
     
-    plt.title("Quantidade de novos cadastros por mês")
+    plt.title("Quantidade de cancelamentos por mês")
     plt.legend(lista_anos_distintos)
     plt.xlabel("Meses")
-    plt.ylabel("Quant. de cadastros")
-    plt.text(0, 0, f"Conclusão: {conclusao}", fontsize=11, color='green')
+    plt.ylabel("Quant. de cancelamentos")
+    plt.text(0, 0, f"Conclusão: {conclusao}", fontsize=11, color='red')
 
-    plt.savefig(f'{diretorio_final}cadastros_por_mes_{id_cliente}.png')
+    plt.savefig(f'{diretorio_final}cancelamentos_por_mes_{id_cliente}.png')
     
     # plt.show()
 
 
-gerar_grafico_de_linhas_n_cadastros_por_mes(diretorio_csv, nome_do_arquivo_csv, 2022, id_cliente, diretorio_grafico_linha)
+gerar_grafico_de_linhas_n_cancelamentos_por_mes(diretorio_csv, nome_do_arquivo_csv, 2022, id_cliente, diretorio_grafico_linha)
